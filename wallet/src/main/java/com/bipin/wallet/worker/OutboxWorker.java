@@ -24,6 +24,9 @@ public class OutboxWorker {
     private final WalletEventProducer producer;
     private final ObjectMapper objectMapper;
 
+    public static final String WALLET_DEBITED_TOPIC = "wallet-debited";
+    public static final String WALLET_CREDITED_TOPIC = "wallet-credited";
+
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void publishEvents(){
@@ -37,7 +40,7 @@ public class OutboxWorker {
                         .build();
 
                 producer.publish(
-                        "wallet-event",
+                        event.getEventType() == "WalletDebited" ? WALLET_DEBITED_TOPIC : WALLET_CREDITED_TOPIC,
                         event.getAggregateId(),
                         objectMapper.writeValueAsString(kafkaEvent)
                 ).get();

@@ -58,8 +58,6 @@ public class WalletServiceImp  implements WalletService{
         
         Wallet savedWallet = walletRepo.save(wallet);
         WalletResponse response = toWalletResponse(savedWallet);
-
-        saveOutboxEvent(savedWallet.getId().toString(),"WalletCreated",response);
         return response;
 
     }
